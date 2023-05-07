@@ -42,7 +42,8 @@ function EventEdit({ selectedEvent, setIsEditing }) {
     };
 
     return (
-        <div className="small-container">
+        <div className='small-container-parent'>
+            <div className="small-container">
             <form onSubmit={handleUpdate}>
                 <h1>Edit Event Details</h1>
                 <label htmlFor="nameOfEvent">Name Of Event</label>
@@ -72,6 +73,7 @@ function EventEdit({ selectedEvent, setIsEditing }) {
                     />
                 </div>
             </form>
+        </div>
         </div>
     );
 }

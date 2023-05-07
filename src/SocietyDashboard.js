@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { db } from './config/firebase';
 import { collection, getDocs } from 'firebase/firestore';
-import Dashboard from './Page/Dashboard/MembersDashboard';
+import MembersDashboard from './Page/Dashboard/MembersDashboard';
 import Events from './Page/Dashboard/Events';
 import Homepage from './Page/Dashboard/homepage/Homepage';
+import { useParams } from 'react-router-dom';
 
 function SocietyDashboard() {
+  const params = useParams();
   // const [societies, setSocieties] = useState([]);
   // const moviesCollectionRef = collection(db, "societies");
   // useEffect(() => {
@@ -29,11 +31,26 @@ function SocietyDashboard() {
   //   }
   //   getSocietiesList();
   // }, [])
+  const [memIsEditing, setMemIsEditing] = useState(false);
+  const [eventIsEditing, setEventIsEditing] = useState(false);
+  const [memIsAdding, setMemIsAdding] = useState(false);
+  const [eventIsAdding, setEventIsAdding] = useState(false);
 
+  const {name, id} = useParams();
+  // const { name, id } = location.state;
+  
   return (
     <div>
-      <Dashboard societyID="rTCiwEE1hnDMwnFy78p1"/>
-      <Events societyID="rTCiwEE1hnDMwnFy78p1"/>
+      { <MembersDashboard
+        societyID={params.societyID}
+        societyName={name}
+        setMemIsAdding={setMemIsAdding}
+        setMemIsEditing={setMemIsEditing} />}
+      {(!memIsEditing && !memIsAdding) && <Events
+        societyID={params.societyID}
+        societyName={name}
+        setEventIsAdding={setEventIsAdding}
+        setEventIsEditing={setEventIsEditing} />}
     </div>
   );
 }

@@ -1,31 +1,41 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Swal from 'sweetalert2';
 import { db } from '../../config/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, collection,getDocs, deleteDoc } from 'firebase/firestore';
 import Header from './Header';
 import EventList from './EventList';
 import EventAdd from './EventAdd';
 import EventEdit from './EventEdit';
 
-function Events({ societyID }) {
-    
+function Events({ societyID, societyName, setEventIsEditing, setEventIsAdding }) {
+
+    const [eventDocs, setEventDocs] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [isAdding, setIsAdding] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
-    // useEffect(()=>{
-    //     setEmployees(societies);
-    // },[societies])
+    useEffect(() => {
+        setEventIsEditing(isEditing);
+    }, [isEditing])
+    useEffect(() => {
+        setEventIsAdding(isAdding);
+    }, [isAdding])
+
+    async function getEventsList() {
+        const dbRef = collection(db, `societies/${societyID}/events`);
+        const docsData = await getDocs(dbRef);
+        const docs = await docsData.docs.map((doc) => ({ ...doc.data() }));
+        setEventDocs(docs);
+    }
 
     const handleEdit = async (societyID, eventID) => {
-        const docRef = await doc(db, `societies/${societyID}/events`, eventID );
+        const docRef = await doc(db, `societies/${societyID}/events`, eventID);
         const docSnap = await getDoc(docRef);
-        // const res = await setDoc(docRef, employee);
         setSelectedEvent(docSnap.data());
         setIsEditing(true);
     }
 
-    const handleDelete = (id) => {
+    const handleDelete = (societyID,eventID) => {
         Swal.fire({
             icon: 'warning',
             title: 'Are you sure?',
@@ -33,19 +43,17 @@ function Events({ societyID }) {
             showCancelButton: true,
             confirmButtonText: 'Yes, delete it!',
             cancelButtonText: 'No, cancel!',
-        }).then(result => {
+        }).then(async (result) => {
             if (result.value) {
-                // const [employee] = employees.filter(employee => employee.id === id);
-
+                await deleteDoc(doc(db, `societies/${societyID}/events`, eventID));
                 Swal.fire({
                     icon: 'success',
                     title: 'Deleted!',
-                    // text: `${employee.firstName}'s data has been deleted.`,
+                    text: `Event's data has been deleted.`,
                     showConfirmButton: false,
                     timer: 1500,
                 });
-
-                // setEmployees(employees.filter(employee => employee.id !== id));
+                getEventsList();
             }
         });
     }
@@ -60,9 +68,10 @@ function Events({ societyID }) {
                         setIsAdding={setIsAdding} headingText="Events"
                     />
                     <EventList
-                        societyID={societyID}
+                        eventDocs={eventDocs}
                         handleEdit={handleEdit}
                         handleDelete={handleDelete}
+                        getEventsList={getEventsList}
                     />
                 </>
             )}

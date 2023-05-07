@@ -26,7 +26,7 @@ function Edit({ selectedMember, setIsEditing }) {
             });
         }
 
-        const employee = {
+        const member = {
             memID,
             societyID,
             fullName,
@@ -37,13 +37,13 @@ function Edit({ selectedMember, setIsEditing }) {
             societyName
         };
 
-        const docRef = await doc(db, `societies/${societyID}/members`, memID );
-        await setDoc(docRef, employee);
-        
+        const docRef = await doc(db, `societies/${societyID}/members`, memID);
+        await setDoc(docRef, member);
+
         Swal.fire({
             icon: 'success',
             title: 'Updated!',
-            text: `${employee.fullName}'s data has been updated.`,
+            text: `${member.fullName}'s data has been updated.`,
             showConfirmButton: false,
             timer: 1500
         });
@@ -53,13 +53,13 @@ function Edit({ selectedMember, setIsEditing }) {
     return (
         <div className="small-container">
             <form onSubmit={handleUpdate}>
-                <h1>Edit Employee</h1>
+                <h1>Edit Member</h1>
                 <label htmlFor="societyName">Society Name</label>
                 <input
                     id="societyName"
                     type="text"
                     name="societyName"
-                    value={societyName}    
+                    value={societyName}
                     onChange={e => setSocietyName(e.target.value)}
                 />
                 <label htmlFor="fullName">Full Name</label>
@@ -67,7 +67,7 @@ function Edit({ selectedMember, setIsEditing }) {
                     id="fullName"
                     type="text"
                     name="fullName"
-                    value={fullName}    
+                    value={fullName}
                     onChange={e => setFullName(e.target.value)}
                 />
                 <label htmlFor="deparement">Deparement</label>

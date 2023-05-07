@@ -3,18 +3,12 @@ import { db } from '../../config/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 
-function EventList({ societyID, handleEdit, handleDelete }) {
-    const [eventDocs, setEventDocs] = useState([]);
+function EventList({ eventDocs, handleEdit, handleDelete, getEventsList }) {
+    
     useEffect(() => {
         console.log("useEffect");
-        async function getdoc() {
-            const dbRef = collection(db, `societies/${societyID}/events`);
-            const docsData = await getDocs(dbRef);
-            const docs = await docsData.docs.map((doc) => ({ ...doc.data() }));
-            setEventDocs(docs);
-        }
-        getdoc();
-    }, [societyID])
+        getEventsList();
+    }, [])
 
     return (
         <div className='contain-table'>
@@ -46,7 +40,7 @@ function EventList({ societyID, handleEdit, handleDelete }) {
                                 </td>
                                 <td className="text-left">
                                     <button
-                                        onClick={() => handleDelete(event.id)}
+                                        onClick={() => handleDelete(event.societyID, event.eventID)}
                                         className="button muted-button"
                                     >
                                         Delete

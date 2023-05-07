@@ -71,7 +71,7 @@ function Add({ societyID, setIsAdding }) {
     return (
         <div className="small-container">
             <form onSubmit={handleAdd}>
-                <h1>Add Employee</h1>
+                <h1>Add Member</h1>
                 <label htmlFor="societyName">Society Name</label>
                 <input
                     id="societyName"

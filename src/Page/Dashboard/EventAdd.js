@@ -50,7 +50,8 @@ function EventAdd({ societyID, setIsAdding }) {
 
 
     return (
-        <div className="small-container">
+        <div className='small-container-parent'>
+            <div className="small-container">
             <form onSubmit={handleAdd}>
                 <h1>Add Event Details</h1>
                 <label htmlFor="nameOfEvent">Name Of Event</label>
@@ -80,6 +81,7 @@ function EventAdd({ societyID, setIsAdding }) {
                     />
                 </div>
             </form>
+        </div>
         </div>
     );
 }

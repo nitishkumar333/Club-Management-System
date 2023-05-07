@@ -3,19 +3,12 @@ import { db } from '../../config/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 
-function List({ societyID, handleEdit, handleDelete }) {
+function List({ members, handleEdit, handleDelete, getMembersList }) {
 
-    const [members, setMembers] = useState([]);
     useEffect(() => {
         console.log("useEffect");
-        async function getdoc() {
-            const dbRef = collection(db, `societies/${societyID}/members`);
-            const docsData = await getDocs(dbRef);
-            const docs = await docsData.docs.map((doc) => ({ ...doc.data() }));
-            setMembers(docs);
-        }
-        getdoc();
-    },[societyID])
+        getMembersList();
+    }, [])
 
     return (
         <div className='contain-table'>
@@ -45,7 +38,7 @@ function List({ societyID, handleEdit, handleDelete }) {
                                 <td>{member.contactNumber} </td>
                                 <td className="text-right">
                                     <button
-                                        onClick={() => handleEdit(societyID,member.memID)}
+                                        onClick={() => handleEdit(member.societyID, member.memID)}
                                         className="button muted-button"
                                     >
                                         Edit
@@ -53,7 +46,7 @@ function List({ societyID, handleEdit, handleDelete }) {
                                 </td>
                                 <td className="text-left">
                                     <button
-                                        onClick={() => handleDelete(societyID,member.memID)}
+                                        onClick={() => handleDelete(member.societyID, member.memID)}
                                         className="button muted-button"
                                     >
                                         Delete

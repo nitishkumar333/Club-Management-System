@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Swal from 'sweetalert2';
 
 import Header from './Header';
@@ -7,22 +7,37 @@ import Add from './Add';
 import Edit from './Edit';
 
 import { db } from '../../config/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, deleteDoc, collection, getDocs } from 'firebase/firestore';
 
-function MembersDashboard({ societyID }) {
+function MembersDashboard({ societyID, societyName, setMemIsEditing, setMemIsAdding }) {
     
+    const [members, setMembers] = useState([]);
     const [selectedMember, setSelectedMember] = useState(null);
     const [isAdding, setIsAdding] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
+    useEffect(() => {
+        setMemIsEditing(isEditing);
+    }, [isEditing])
+    useEffect(() => {
+        setMemIsAdding(isAdding);
+    }, [isAdding])
+
+    async function getMembersList() {
+        const dbRef = collection(db, `societies/${societyID}/members`);
+        const docsData = await getDocs(dbRef);
+        const docs = await docsData.docs.map((doc) => ({ ...doc.data() }));
+        setMembers(docs);
+    }
+
     const handleEdit = async (societyID, memID) => {
-        const dbRef = await doc(db,`societies/${societyID}/members`,memID);
+        const dbRef = await doc(db, `societies/${societyID}/members`, memID);
         const docSnap = await getDoc(dbRef);
         setSelectedMember(docSnap.data());
         setIsEditing(true);
     }
 
-    const handleDelete = (id) => {
+    const handleDelete = (societyID, memID) => {
         Swal.fire({
             icon: 'warning',
             title: 'Are you sure?',
@@ -30,19 +45,17 @@ function MembersDashboard({ societyID }) {
             showCancelButton: true,
             confirmButtonText: 'Yes, delete it!',
             cancelButtonText: 'No, cancel!',
-        }).then(result => {
+        }).then(async (result) => {
             if (result.value) {
-                // const [employee] = employees.filter(employee => employee.id === id);
-
+                await deleteDoc(doc(db, `societies/${societyID}/members`, memID));
                 Swal.fire({
                     icon: 'success',
                     title: 'Deleted!',
-                    // text: `${employee.firstName}'s data has been deleted.`,
+                    text: `Member's Data has been deleted.`,
                     showConfirmButton: false,
                     timer: 1500,
                 });
-
-                // setEmployees(employees.filter(employee => employee.id !== id));
+                getMembersList();
             }
         });
     }
@@ -54,12 +67,13 @@ function MembersDashboard({ societyID }) {
             {!isAdding && !isEditing && (
                 <>
                     <Header
-                        setIsAdding={setIsAdding} headingText="Society Management Software"
+                        setIsAdding={setIsAdding} headingText="Members"
                     />
                     <List
-                        societyID={societyID}
+                        members={members}
                         handleEdit={handleEdit}
                         handleDelete={handleDelete}
+                        getMembersList={getMembersList}
                     />
                 </>
             )}
