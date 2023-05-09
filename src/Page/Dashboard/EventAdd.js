@@ -3,11 +3,14 @@ import Swal from 'sweetalert2';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '../../config/firebase';
 import { doc, setDoc } from 'firebase/firestore';
+import FileUpload from './FileUpload';
+import styles from './Container.module.css'
 
 function EventAdd({ societyID, setIsAdding }) {
 
     const [nameOfEvent, setNameOfEvent] = useState('');
     const [date, setDate] = useState('');
+    const [report, setReport] = useState('');
 
     const onAdd = async (path, newEventData ,eventID) => {
         const dbRef = doc(db, path,eventID);
@@ -51,7 +54,7 @@ function EventAdd({ societyID, setIsAdding }) {
 
     return (
         <div className='small-container-parent'>
-            <div className="small-container">
+            <div className={styles.smallContainer}>
             <form onSubmit={handleAdd}>
                 <h1>Add Event Details</h1>
                 <label htmlFor="nameOfEvent">Name Of Event</label>
@@ -70,6 +73,15 @@ function EventAdd({ societyID, setIsAdding }) {
                     value={date}
                     onChange={e => setDate(e.target.value)}
                 />
+                <label htmlFor="report">Upload Report</label>
+                <FileUpload/>
+                {/* <input
+                    id="report"
+                    type="file"
+                    name="report"
+                    value={report}
+                    onChange={e => setReport(e.target.value)}
+                /> */}
                 <div style={{ marginTop: '30px' }}>
                     <input type="submit" value="Add" />
                     <input

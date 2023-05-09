@@ -1,0 +1,12 @@
+.headerTextAndButton{
+    display: flex;
+    justify-content: space-between;
+    /* background-color: #1cb864; */
+}
+.headerTextAndButton h1{
+    margin: 0px;
+    padding: 0;
+}
+.headerTextAndButton button{
+    margin: 0px;
+}

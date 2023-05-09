@@ -1,10 +1,11 @@
 import React from 'react'
+import FileUpload from './FileUpload';
 import { db } from '../../config/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 
 function EventList({ eventDocs, handleEdit, handleDelete, getEventsList }) {
-    
+
     useEffect(() => {
         console.log("useEffect");
         getEventsList();
@@ -21,6 +22,7 @@ function EventList({ eventDocs, handleEdit, handleDelete, getEventsList }) {
                         <th colSpan={2} className="text-center">
                             Actions
                         </th>
+                        <th>Report</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,6 +47,15 @@ function EventList({ eventDocs, handleEdit, handleDelete, getEventsList }) {
                                     >
                                         Delete
                                     </button>
+                                </td>
+                                <td className="text-left">
+                                    {/* <FileUpload/> */}
+                                    {/* <button
+                                        onClick={() => handleDelete(event.societyID, event.eventID)}
+                                        className="button muted-button"
+                                    >
+                                        Upload Report
+                                    </button> */}
                                 </td>
                             </tr>
                         ))

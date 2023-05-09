@@ -7,12 +7,29 @@
 .small-container input:hover{
   border: 1px solid #767676;
 }
-.headerTextAndButton{
-  display: flex;
-  justify-content: space-between;
-}
 .container button{
   border-radius: 5px;
+}
+.small-container-parent{
+  /* max-height: 60vh; */
+  /* margin: auto; */
+}
+@media screen and (max-width: 1400px) {
+  .small-container-parent .small-container{
+    max-width: 300px;
+  }
+  td{
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .small-container h1{
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 2rem;
+  }
+  .small-container input[type=text]{
+    padding: 8px;
+  }
 }
 
 /*! 
@@ -586,6 +603,7 @@ dd {
   padding: 1rem 2rem;
   margin-left: auto;
   margin-right: auto;
+  padding-bottom: 0;
 }
 
 .small-container {
@@ -823,7 +841,7 @@ button,
   font-size: 1rem;
   text-transform: none;
   padding: 0.75rem 1.25rem;
-  margin: 0 0 0.5rem 0;
+  margin: 0;
   vertical-align: middle;
   text-align: center;
   cursor: pointer;

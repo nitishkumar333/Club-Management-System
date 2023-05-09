@@ -3,6 +3,7 @@ import Swal from 'sweetalert2';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '../../config/firebase';
 import { doc, setDoc } from 'firebase/firestore';
+import styles from './Container.module.css'
 
 function Add({ societyID, setIsAdding }) {
 
@@ -69,7 +70,7 @@ function Add({ societyID, setIsAdding }) {
 
 
     return (
-        <div className="small-container">
+        <div className={styles.smallContainer}>
             <form onSubmit={handleAdd}>
                 <h1>Add Member</h1>
                 <label htmlFor="societyName">Society Name</label>

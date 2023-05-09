@@ -1,12 +1,12 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Homepage from "./Homepage";
+import Homepage, {loader as initialListLoader} from "./Homepage";
 import SocietyDashboard from "../../../SocietyDashboard";
 
 
 function HomepageLayout() {
     const router = createBrowserRouter([
         {
-            path: '/', element: <Homepage />
+            path: '/', element: <Homepage />, loader:initialListLoader
         },
         { path: ':societyID', element: <SocietyDashboard /> },
     ])
