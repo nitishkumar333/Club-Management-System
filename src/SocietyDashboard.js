@@ -41,14 +41,18 @@ function SocietyDashboard() {
   
   return (
     <div>
-      { <MembersDashboard
+      { (!eventIsAdding) && <MembersDashboard
         societyID={params.societyID}
         societyName={name}
+        isEditing={memIsEditing}
+        setIsEditing={setMemIsEditing}
         setMemIsAdding={setMemIsAdding}
         setMemIsEditing={setMemIsEditing} />}
-      {(!memIsEditing && !memIsAdding) && <Events
+        
+      { !memIsEditing && !memIsAdding && <Events
         societyID={params.societyID}
-        societyName={name}
+        isEditing={eventIsEditing}
+        setIsEditing={setEventIsEditing}
         setEventIsAdding={setEventIsAdding}
         setEventIsEditing={setEventIsEditing} />}
     </div>

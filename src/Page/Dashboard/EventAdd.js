@@ -5,12 +5,46 @@ import { db } from '../../config/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import FileUpload from './FileUpload';
 import styles from './Container.module.css'
+import { storage } from '../../config/firebase';
+import { getDownloadURL, ref, uploadBytesResumable,uploadBytes } from 'firebase/storage';
 
 function EventAdd({ societyID, setIsAdding }) {
 
+    const [submitBtn,setSubmitBtn] = useState(true);
     const [nameOfEvent, setNameOfEvent] = useState('');
     const [date, setDate] = useState('');
-    const [report, setReport] = useState('');
+    const [file, setFile] = useState();
+    const [progress,setProgress] = useState(null);
+    
+    const reportUploadHandler = (e)=>{
+        const file = e.target.files[0];
+        setFile(file);
+    }
+    const afterFileUploaded = async (fileurl,eventID)=>{
+        const newEventPath = `societies/${societyID}/events`;
+        const newEventData = {
+            eventID,
+            societyID,
+            nameOfEvent,
+            date,
+            fileurl
+            // societyName
+        }
+        await onAdd(newEventPath, newEventData, eventID);
+        setIsAdding(false);
+    }
+    const uploadReport = async (file,societyID, eventID)=>{
+        if(!file) return;
+        const storageRef = ref(storage,`/reports/${societyID}/${eventID}/${file.name}`);
+        const UploadTask = uploadBytesResumable(storageRef,file);
+        UploadTask.on('state_changed',(snapshot)=>{
+            const prog = Math.round((snapshot.bytesTransferred / snapshot.totalBytes)*100);
+            setProgress(prog);
+        },(err)=>console.log(err),
+        ()=>{
+            getDownloadURL(UploadTask.snapshot.ref).then((url)=>{afterFileUploaded(url,eventID)});
+        })
+    }
 
     const onAdd = async (path, newEventData ,eventID) => {
         const dbRef = doc(db, path,eventID);
@@ -26,6 +60,7 @@ function EventAdd({ societyID, setIsAdding }) {
 
     const handleAdd = async (e) => {
         e.preventDefault();
+        setSubmitBtn(false);
         if (!nameOfEvent || !date) {
             return Swal.fire({
                 icon: 'error',
@@ -36,17 +71,18 @@ function EventAdd({ societyID, setIsAdding }) {
         }
 
         if (societyID != null) {
-            const newEventPath = `societies/${societyID}/events`;
             const eventID = uuidv4();
-            const newEventData = {
-                eventID,
-                societyID,
-                nameOfEvent,
-                date,
-                // societyName
-            }
-            await onAdd(newEventPath, newEventData, eventID);
-            setIsAdding(false);
+            await uploadReport(file,societyID,eventID);
+            // const newEventData = {
+            //     eventID,
+            //     societyID,
+            //     nameOfEvent,
+            //     date,
+            //     fileurl
+            //     // societyName
+            // }
+            // await onAdd(newEventPath, newEventData, eventID);
+            // setIsAdding(false);
         }
 
     }
@@ -74,7 +110,8 @@ function EventAdd({ societyID, setIsAdding }) {
                     onChange={e => setDate(e.target.value)}
                 />
                 <label htmlFor="report">Upload Report</label>
-                <FileUpload/>
+                    <input type="file" onChange={reportUploadHandler}/>
+                    {progress && <label style={{display:'inline-block', margin:'0', padding:'0'}}>{progress}%</label>}
                 {/* <input
                     id="report"
                     type="file"
@@ -83,14 +120,14 @@ function EventAdd({ societyID, setIsAdding }) {
                     onChange={e => setReport(e.target.value)}
                 /> */}
                 <div style={{ marginTop: '30px' }}>
-                    <input type="submit" value="Add" />
-                    <input
+                    { submitBtn && <input type="submit" value="Add"/>}
+                    { submitBtn && <input
                         style={{ marginLeft: '12px' }}
                         className="muted-button"
                         type="button"
                         value="Cancel"
                         onClick={() => setIsAdding(false)}
-                    />
+                    />}
                 </div>
             </form>
         </div>

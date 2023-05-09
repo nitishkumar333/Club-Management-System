@@ -2,8 +2,9 @@ import React, { useState } from 'react'
 import Swal from 'sweetalert2';
 import { db } from '../../config/firebase';
 import { doc, setDoc } from 'firebase/firestore';
+import styles from './Container.module.css'
 
-function EventEdit({ selectedEvent, setIsEditing }) {
+function EventEdit({ selectedEvent, setIsEditing, getEventsList }) {
     const [nameOfEvent, setNameOfEvent] = useState(selectedEvent.nameOfEvent);
     const [date, setDate] = useState(selectedEvent.date);
     const societyID = selectedEvent.societyID;
@@ -38,12 +39,13 @@ function EventEdit({ selectedEvent, setIsEditing }) {
             showConfirmButton: false,
             timer: 1500
         });
+        getEventsList();
         setIsEditing(false);
     };
 
     return (
-        <div className='small-container-parent'>
-            <div className="small-container">
+        <div className={styles.smallContainerParent}>
+            <div className={styles.smallContainer}>
             <form onSubmit={handleUpdate}>
                 <h1>Edit Event Details</h1>
                 <label htmlFor="nameOfEvent">Name Of Event</label>

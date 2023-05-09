@@ -7,16 +7,11 @@ import EventList from './EventList';
 import EventAdd from './EventAdd';
 import EventEdit from './EventEdit';
 
-function Events({ societyID, societyName, setEventIsEditing, setEventIsAdding }) {
+function Events({ societyID, societyName, isEditing, setIsEditing, setEventIsAdding }) {
 
     const [eventDocs, setEventDocs] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [isAdding, setIsAdding] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
-
-    useEffect(() => {
-        setEventIsEditing(isEditing);
-    }, [isEditing])
     useEffect(() => {
         setEventIsAdding(isAdding);
     }, [isAdding])
@@ -62,7 +57,7 @@ function Events({ societyID, societyName, setEventIsEditing, setEventIsAdding })
     return (
         <div className='container'>
             {/* List */}
-            {!isAdding && !isEditing && (
+            {!isAdding && (
                 <>
                     <Header
                         setIsAdding={setIsAdding} headingText="Events"
@@ -87,6 +82,7 @@ function Events({ societyID, societyName, setEventIsEditing, setEventIsAdding })
                 <EventEdit
                     selectedEvent={selectedEvent}
                     setIsEditing={setIsEditing}
+                    getEventsList={getEventsList}
                 />
             )}
         </div>
