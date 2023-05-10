@@ -12,6 +12,7 @@ function EventAdd({ societyID, setIsAdding }) {
 
     const [submitBtn,setSubmitBtn] = useState(true);
     const [nameOfEvent, setNameOfEvent] = useState('');
+    const [description, setDescription] = useState('');
     const [date, setDate] = useState('');
     const [file, setFile] = useState();
     const [progress,setProgress] = useState(null);
@@ -27,7 +28,8 @@ function EventAdd({ societyID, setIsAdding }) {
             societyID,
             nameOfEvent,
             date,
-            fileurl
+            fileurl,
+            description
             // societyName
         }
         await onAdd(newEventPath, newEventData, eventID);
@@ -60,8 +62,7 @@ function EventAdd({ societyID, setIsAdding }) {
 
     const handleAdd = async (e) => {
         e.preventDefault();
-        setSubmitBtn(false);
-        if (!nameOfEvent || !date) {
+        if (!nameOfEvent || !date || !description || !file) {
             return Swal.fire({
                 icon: 'error',
                 title: 'Error!',
@@ -69,7 +70,8 @@ function EventAdd({ societyID, setIsAdding }) {
                 showConfirmButton: true
             });
         }
-
+        setSubmitBtn(false);
+        
         if (societyID != null) {
             const eventID = uuidv4();
             await uploadReport(file,societyID,eventID);
@@ -108,6 +110,14 @@ function EventAdd({ societyID, setIsAdding }) {
                     name="date"
                     value={date}
                     onChange={e => setDate(e.target.value)}
+                />
+                <label htmlFor="description">Description</label>
+                <input
+                    id="description"
+                    type="text"
+                    name="description"
+                    value={description}
+                    onChange={e => setDescription(e.target.value)}
                 />
                 <label htmlFor="report">Upload Report</label>
                     <input type="file" onChange={reportUploadHandler}/>

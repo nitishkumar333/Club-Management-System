@@ -1,8 +1,6 @@
 import { Link, useNavigate, useLoaderData } from 'react-router-dom'
 import logo from '../../../rkgitLogo.jpg'
 import styles from './Homepage.module.css'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { db } from '../../../config/firebase';

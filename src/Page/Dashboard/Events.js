@@ -6,6 +6,9 @@ import Header from './Header';
 import EventList from './EventList';
 import EventAdd from './EventAdd';
 import EventEdit from './EventEdit';
+import { storage } from '../../config/firebase';
+import { deleteObject, listAll, ref } from 'firebase/storage';
+
 
 function Events({ societyID, societyName, isEditing, setIsEditing, setEventIsAdding }) {
 
@@ -30,6 +33,13 @@ function Events({ societyID, societyName, isEditing, setIsEditing, setEventIsAdd
         setIsEditing(true);
     }
 
+    async function deleteFolder(path: string) {
+        console.log(path);
+        const folderRef = ref(storage, path);
+        const fileList = await listAll(folderRef);
+        return deleteObject(fileList.items[0]);
+    }
+
     const handleDelete = (societyID,eventID) => {
         Swal.fire({
             icon: 'warning',
@@ -40,7 +50,17 @@ function Events({ societyID, societyName, isEditing, setIsEditing, setEventIsAdd
             cancelButtonText: 'No, cancel!',
         }).then(async (result) => {
             if (result.value) {
-                await deleteDoc(doc(db, `societies/${societyID}/events`, eventID));
+                try{
+                    await deleteFolder(`reports/${societyID}/${eventID}`)
+                    await deleteDoc(doc(db, `societies/${societyID}/events`, eventID));
+                } catch (error){
+                    return Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: `${error.message}`,
+                        showConfirmButton: true
+                    });
+                }
                 Swal.fire({
                     icon: 'success',
                     title: 'Deleted!',

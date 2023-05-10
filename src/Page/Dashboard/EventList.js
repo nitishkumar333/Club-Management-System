@@ -3,6 +3,8 @@ import FileUpload from './FileUpload';
 import { db } from '../../config/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faDownload } from '@fortawesome/free-solid-svg-icons'
 
 function EventList({ eventDocs, handleEdit, handleDelete, getEventsList }) {
 
@@ -19,10 +21,11 @@ function EventList({ eventDocs, handleEdit, handleDelete, getEventsList }) {
                         <th>No.</th>
                         <th>Name Of Event</th>
                         <th>Date</th>
-                        <th colSpan={2} className="text-center">
+                        <th>Description</th>
+                        <th style={{backgroudColor:'black',textAlign:'center'}} colSpan={1}>Report</th>
+                        <th className="text-center">
                             Actions
                         </th>
-                        <th>Report</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,33 +33,29 @@ function EventList({ eventDocs, handleEdit, handleDelete, getEventsList }) {
                         eventDocs?.map((event, i) => (
                             <tr key={event.eventID}>
                                 <td>{i + 1}</td>
-                                <td>{event.nameOfEvent}</td>
+                                <td style={{wordWrap:'break-word',maxWidth:'10vw'}}>{event.nameOfEvent}</td>
                                 <td>{event.date}</td>
-                                <td className="text-right">
+                                <td style={{wordWrap:'break-word',maxWidth:'17vw'}}>{event.description}</td>
+                                <td className="text-left" style={{ textAlign:'center'}}>
+                                    {event.fileurl && <a href={event.fileurl}>
+                                        <button>Report <FontAwesomeIcon icon={faDownload}/></button>
+                                    </a> }
+                                </td>
+                                <td className="text-right" style={{textAlign:'center'}}>
                                     <button
                                         onClick={() => handleEdit(event.societyID, event.eventID)}
                                         className="button muted-button"
                                     >
                                         Edit
                                     </button>
-                                </td>
-                                <td className="text-left">
-                                    <button
+                                    <button style={{marginLeft:'15px'}}
                                         onClick={() => handleDelete(event.societyID, event.eventID)}
                                         className="button muted-button"
                                     >
                                         Delete
                                     </button>
                                 </td>
-                                <td className="text-left">
-                                    {/* <FileUpload/> */}
-                                    {/* <button
-                                        onClick={() => handleDelete(event.societyID, event.eventID)}
-                                        className="button muted-button"
-                                    >
-                                        Upload Report
-                                    </button> */}
-                                </td>
+                                
                             </tr>
                         ))
                     ) : (

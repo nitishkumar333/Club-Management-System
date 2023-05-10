@@ -7,6 +7,7 @@ import styles from './Container.module.css'
 function EventEdit({ selectedEvent, setIsEditing, getEventsList }) {
     const [nameOfEvent, setNameOfEvent] = useState(selectedEvent.nameOfEvent);
     const [date, setDate] = useState(selectedEvent.date);
+    const [description, setDescription] = useState(selectedEvent.description);
     const societyID = selectedEvent.societyID;
     const eventID = selectedEvent.eventID;
 
@@ -63,6 +64,14 @@ function EventEdit({ selectedEvent, setIsEditing, getEventsList }) {
                     name="date"
                     value={date}    
                     onChange={e => setDate(e.target.value)}
+                />
+                <label htmlFor="description">Description</label>
+                <input
+                    id="description"
+                    type="text"
+                    name="description"
+                    value={description}
+                    onChange={e => setDescription(e.target.value)}
                 />
                 <div style={{ marginTop: '30px' }}>
                     <input type="submit" value="Update" />
