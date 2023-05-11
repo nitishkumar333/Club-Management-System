@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Swal from 'sweetalert2';
 import { db } from '../../config/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import styles from './Container.module.css'
+import { AuthContext } from '../context';
 
 function EventEdit({ selectedEvent, setIsEditing, getEventsList }) {
+    const {currentUser} = useContext(AuthContext);
     const [nameOfEvent, setNameOfEvent] = useState(selectedEvent.nameOfEvent);
     const [date, setDate] = useState(selectedEvent.date);
     const [description, setDescription] = useState(selectedEvent.description);
@@ -22,12 +24,13 @@ function EventEdit({ selectedEvent, setIsEditing, getEventsList }) {
                 showConfirmButton: true
             });
         }
-
+        const userId = currentUser.uid;
         const newEvent = {
             nameOfEvent,
             date,
             societyID,
-            eventID
+            eventID,
+            userId
         };
 
         const docRef = await doc(db, `societies/${selectedEvent.societyID}/events`, eventID );

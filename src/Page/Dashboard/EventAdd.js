@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Swal from 'sweetalert2';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '../../config/firebase';
@@ -7,9 +7,10 @@ import FileUpload from './FileUpload';
 import styles from './Container.module.css'
 import { storage } from '../../config/firebase';
 import { getDownloadURL, ref, uploadBytesResumable,uploadBytes } from 'firebase/storage';
+import { AuthContext } from '../context';
 
 function EventAdd({ societyID, setIsAdding }) {
-
+    const {currentUser} = useContext(AuthContext);
     const [submitBtn,setSubmitBtn] = useState(true);
     const [nameOfEvent, setNameOfEvent] = useState('');
     const [description, setDescription] = useState('');
@@ -23,13 +24,15 @@ function EventAdd({ societyID, setIsAdding }) {
     }
     const afterFileUploaded = async (fileurl,eventID)=>{
         const newEventPath = `societies/${societyID}/events`;
+        const userId = currentUser.uid;
         const newEventData = {
             eventID,
             societyID,
             nameOfEvent,
             date,
             fileurl,
-            description
+            description,
+            userId
             // societyName
         }
         await onAdd(newEventPath, newEventData, eventID);

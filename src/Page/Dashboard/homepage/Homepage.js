@@ -1,22 +1,26 @@
 import { Link, useNavigate, useLoaderData } from 'react-router-dom'
 import logo from '../../../rkgitLogo.jpg'
 import styles from './Homepage.module.css'
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useEffect } from 'react';
-import { db } from '../../../config/firebase';
+import { auth, db } from '../../../config/firebase';
 import { collection, getDocs } from 'firebase/firestore';
+import { signOut } from "firebase/auth";
+import { AuthContext } from '../../context';
 
 function Homepage() {
+    const {currentUser} = useContext(AuthContext);
+    console.log("homepage",currentUser);
     // const [societies, setSocieties] = useState([]);
     const societies = useLoaderData();
     const [inputText, setInputText] = useState('');
     const [searchList, setSearchList] = useState();
     const navigate = useNavigate();
-    const listClickHandler = (society) => {
-        console.log("clicked");
-        navigate(`${society.id}`, { state: { name: society.societyName, id: society.id } });
-        // <Link to={`${society.id}`} state={{ name: society.societyName, id: society.id }}></Link>
-    }
+    // const listClickHandler = (society) => {
+    //     console.log("clicked");
+    //     navigate(`/${society.id}`, { state: { name: society.societyName, id: society.id } });
+    //     // <Link to={`${society.id}`} state={{ name: society.societyName, id: society.id }}></Link>
+    // }
     
     // useEffect(async () => {
     //     console.log("useEffect emptyDependency");
@@ -33,9 +37,9 @@ function Homepage() {
 
     function getSearchList(resultArr) {
         const content = resultArr.map((society) => {
-            return <li key={society.id} onClick={() => listClickHandler(society)}>
-                <Link>{society.societyName}</Link>
-            </li>
+            return <Link key={society.id} to={`${society.id}`} state={{ name: society.societyName, id: society.id }}>
+                <li>{society.societyName}</li>
+            </Link>
         })
         const unorderedList = <ul>{content}</ul>
         return unorderedList;
@@ -43,6 +47,9 @@ function Homepage() {
 
     const inputHandler = (e) => {
         setInputText(e.target.value);
+    }
+    const signOutHandler=()=>{
+        signOut(auth).then(()=>{console.log("success logout")}).catch(err=>console.log(err.message))
     }
 
     useEffect(() => {
@@ -60,11 +67,13 @@ function Homepage() {
 
     return (
         <div className={`container ${styles.homepage}`}>
+            <div className={styles.homepageContainer}>
             <div className={styles.imageContainer}>
                 <img src={logo} alt="" />
             </div>
+            <button onClick={signOutHandler}>Sign Out</button>
             <div>
-                <label>Clubs in Raj Kumar Goel Institue Of Technology</label>
+                <label>Clubs in Raj Kumar Goel Institute Of Technology</label>
                 <div className={styles['search-bar']}>
                     <input type="text" id='input-box' placeholder='Search Club' autoComplete='off' onChange={inputHandler} />
                     {/* <button><FontAwesomeIcon icon={faMagnifyingGlass} /></button> */}
@@ -73,7 +82,7 @@ function Homepage() {
                     {searchList}
                 </div>
             </div>
-
+            </div>
         </div>
     )
 }

@@ -1,12 +1,13 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Swal from 'sweetalert2';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '../../config/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import styles from './Container.module.css'
+import { AuthContext } from '../context';
 
 function Add({ societyID, setIsAdding }) {
-
+    const {currentUser} = useContext(AuthContext);
     const [fullName, setFullName] = useState('');
     const [deparement, setDeparement] = useState('');
     const [position, setPosition] = useState('');
@@ -52,6 +53,7 @@ function Add({ societyID, setIsAdding }) {
         if (societyID != null) {
             const newMemberPath = `societies/${societyID}/members`;
             const memID = uuidv4();
+            const userId = currentUser.uid;
             const newMember = {
                 memID,
                 societyID,
@@ -60,7 +62,8 @@ function Add({ societyID, setIsAdding }) {
                 position,
                 email,
                 contactNumber,
-                societyName
+                societyName,
+                userId
             }
             await onAdd(newMemberPath, newMember, memID);
             setIsAdding(false);

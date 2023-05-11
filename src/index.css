@@ -14,6 +14,8 @@
   /* max-height: 60vh; */
   /* margin: auto; */
 }
+
+
 @media screen and (max-width: 1400px) {
   .small-container-parent .small-container{
     max-width: 300px;
@@ -508,7 +510,7 @@ h5 {
 }
 
 a {
-  color: #0366ee;
+  color: white;
   text-decoration: none;
 }
 

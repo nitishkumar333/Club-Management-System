@@ -1,14 +1,27 @@
 .homepage label{
-    padding-top: 2rem;
+    margin: 10px 0;
     font-size: 2rem;
 }
 .homepage{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     height: 100vh;
     padding: 0;
+}
+.homepage button{
+    margin-top: 1rem;
+    background: transparent;
+    color: #404040;
+    transition: all 0.5s all;
+}
+.homepage button:hover{
+    background: rgba(0,0,204,0.1);
+}
+.homepageContainer{
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    transform: translateY(30vh);
 }
 .imageContainer {
     display: flex;
@@ -49,43 +62,33 @@
     display: flex;
     font-size: 18px;
 }
-.search-bar button{
-    background: #0000cc;
-}
 
 .result-box{
+    max-height: 40vh;
+    border-radius: 12px;
     overflow-y: scroll;
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 204, 0.7);
 }
 
 .result-box ul{
     border-top: 1px solid #999;
-    padding: 10px 0 0 0;
+    padding: 5px 0;
+    margin: 0;
 }
-.result-box::-webkit-scrollbar-track
-{
-	background-color: #F5F5F5;
-}
-
 .result-box::-webkit-scrollbar
 {
-	width: 8px;
-	background-color: #F5F5F5;
-}
-
-.result-box::-webkit-scrollbar-thumb
-{
-	background-color: #000000;
-	border: 2px solid #555555;
+	display: none;
 }
 .result-box ul li{
-    font-size: 12px;
+    font-size: 14px;
     list-style: none;
     border-radius: 3px;
     padding: 10px 10px;
     cursor: pointer;
-    background-color: #999;
+    border: 1px solid #0000cc;
     margin: 0.5rem;
     letter-spacing: 3px;
+    transition: all 0.4s ease;
 }
 .result-box ul li:hover{
     color: rgb(225, 225, 225);
@@ -108,5 +111,23 @@
     }
     .result-box ul li{
         font-size: 12px;
+    }
+    .homepageContainer{
+        transform: translateY(15vh);
+    }
+  }
+@media screen and (max-width: 400px) {
+    .homepageContainer label{
+        text-align: center;
+    }
+  }
+@media screen and (max-height: 1000px) {
+    .homepageContainer{
+        transform: translateY(10vh);
+    }
+  }
+@media screen and (max-height: 720px) {
+    .homepageContainer{
+        transform: translateY(2vh);
     }
   }

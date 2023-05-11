@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Swal from 'sweetalert2';
 import { db } from '../../config/firebase';
 import { doc, setDoc } from 'firebase/firestore';
+import { AuthContext } from '../context';
 
 function Edit({ selectedMember, setIsEditing }) {
-
+    const {currentUser} = useContext(AuthContext);
     const [fullName, setFullName] = useState(selectedMember.fullName);
     const [deparement, setDeparement] = useState(selectedMember.deparement);
     const [position, setPosition] = useState(selectedMember.position);
@@ -25,7 +26,7 @@ function Edit({ selectedMember, setIsEditing }) {
                 showConfirmButton: true
             });
         }
-
+        const userId = currentUser.uid;
         const member = {
             memID,
             societyID,
@@ -34,7 +35,8 @@ function Edit({ selectedMember, setIsEditing }) {
             position,
             email,
             contactNumber,
-            societyName
+            societyName,
+            userId
         };
 
         const docRef = await doc(db, `societies/${societyID}/members`, memID);
