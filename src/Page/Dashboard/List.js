@@ -36,16 +36,14 @@ function List({ members, handleEdit, handleDelete, getMembersList }) {
                                 <td>{member.position}</td>
                                 <td>{member.email}</td>
                                 <td>{member.contactNumber} </td>
-                                <td className="text-right">
-                                    <button
+                                <td className="text-center">
+                                    <button style={{'border':'2px solid #007bff','color':'#007bff'}}
                                         onClick={() => handleEdit(member.societyID, member.memID)}
                                         className="button muted-button"
                                     >
                                         Edit
                                     </button>
-                                </td>
-                                <td className="text-left">
-                                    <button
+                                    <button style={{marginLeft:'15px','background':'#e01d1d','color':'white'}}
                                         onClick={() => handleDelete(member.societyID, member.memID)}
                                         className="button muted-button"
                                     >

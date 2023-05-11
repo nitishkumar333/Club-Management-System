@@ -67,7 +67,7 @@
     max-height: 40vh;
     border-radius: 12px;
     overflow-y: scroll;
-    box-shadow: 0 5px 10px 0 rgba(0, 0, 204, 0.7);
+    box-shadow: 0 5px 10px 0 rgba(42, 42, 42, 0.7);
 }
 
 .result-box ul{
@@ -100,10 +100,32 @@
     text-decoration: none;
     transition: all 0.5s ease;
 }
-
-@media screen and (max-width: 1500px) {
-    
-  }
+.navbar{
+    width: 100%;
+    background-color: #0250bc;
+    z-index: 10;
+}
+.navbar .navContainer{
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.navContainer button{
+    margin-right: 2rem;
+    background-color: antiquewhite;
+    color: #404040;
+    padding-left: 33px;
+    padding-right: 33px;
+}
+.navbar h1{
+    margin: 0;
+    padding: 15px 0;
+    margin-left: 2rem;
+    font-size: 30px;
+    color: antiquewhite;
+}
 
 @media screen and (max-width: 1300px) {
     .homepage label {
@@ -129,5 +151,8 @@
 @media screen and (max-height: 720px) {
     .homepageContainer{
         transform: translateY(2vh);
+    }
+    .navbar h1{
+        font-size: 25px;
     }
   }

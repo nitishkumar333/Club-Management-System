@@ -9,19 +9,12 @@ import Edit from './Edit';
 import { db } from '../../config/firebase';
 import { doc, getDoc, deleteDoc, collection, getDocs } from 'firebase/firestore';
 
-function MembersDashboard({ societyID, societyName, setMemIsEditing, setMemIsAdding }) {
+function MembersDashboard({ societyID, societyName }) {
     
     const [members, setMembers] = useState([]);
     const [selectedMember, setSelectedMember] = useState(null);
     const [isAdding, setIsAdding] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-
-    useEffect(() => {
-        setMemIsEditing(isEditing);
-    }, [isEditing])
-    useEffect(() => {
-        setMemIsAdding(isAdding);
-    }, [isAdding])
 
     async function getMembersList() {
         const dbRef = collection(db, `societies/${societyID}/members`);
@@ -47,7 +40,16 @@ function MembersDashboard({ societyID, societyName, setMemIsEditing, setMemIsAdd
             cancelButtonText: 'No, cancel!',
         }).then(async (result) => {
             if (result.value) {
-                await deleteDoc(doc(db, `societies/${societyID}/members`, memID));
+                try{
+                    await deleteDoc(doc(db, `societies/${societyID}/members`, memID));
+                } catch(err){
+                    return Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: `${err.message}`,
+                        showConfirmButton: true
+                    });
+                }
                 Swal.fire({
                     icon: 'success',
                     title: 'Deleted!',
@@ -64,7 +66,7 @@ function MembersDashboard({ societyID, societyName, setMemIsEditing, setMemIsAdd
     return (
         <div className='container'>
             {/* List */}
-            {!isAdding && !isEditing && (
+            {(
                 <>
                     <Header
                         setIsAdding={setIsAdding} headingText="Members"
@@ -82,6 +84,7 @@ function MembersDashboard({ societyID, societyName, setMemIsEditing, setMemIsAdd
                 <Add
                     societyID={societyID}
                     setIsAdding={setIsAdding}
+                    getMembersList={getMembersList}
                 />
             )}
             {/* Edit */}
@@ -89,6 +92,7 @@ function MembersDashboard({ societyID, societyName, setMemIsEditing, setMemIsAdd
                 <Edit
                     selectedMember={selectedMember}
                     setIsEditing={setIsEditing}
+                    getMembersList={getMembersList}
                 />
             )}
         </div>

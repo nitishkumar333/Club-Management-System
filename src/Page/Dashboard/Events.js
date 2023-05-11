@@ -10,14 +10,12 @@ import { storage } from '../../config/firebase';
 import { deleteObject, listAll, ref } from 'firebase/storage';
 
 
-function Events({ societyID, societyName, isEditing, setIsEditing, setEventIsAdding }) {
+function Events({ societyID }) {
 
     const [eventDocs, setEventDocs] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [isAdding, setIsAdding] = useState(false);
-    useEffect(() => {
-        setEventIsAdding(isAdding);
-    }, [isAdding])
+    const [isEditing, setIsEditing] = useState(false);
 
     async function getEventsList() {
         const dbRef = collection(db, `societies/${societyID}/events`);
@@ -51,8 +49,8 @@ function Events({ societyID, societyName, isEditing, setIsEditing, setEventIsAdd
         }).then(async (result) => {
             if (result.value) {
                 try{
-                    await deleteFolder(`reports/${societyID}/${eventID}`)
                     await deleteDoc(doc(db, `societies/${societyID}/events`, eventID));
+                    await deleteFolder(`reports/${societyID}/${eventID}`)
                 } catch (error){
                     return Swal.fire({
                         icon: 'error',
@@ -77,7 +75,7 @@ function Events({ societyID, societyName, isEditing, setIsEditing, setEventIsAdd
     return (
         <div className='container'>
             {/* List */}
-            {!isAdding && (
+            {(
                 <>
                     <Header
                         setIsAdding={setIsAdding} headingText="Events"
@@ -95,6 +93,7 @@ function Events({ societyID, societyName, isEditing, setIsEditing, setEventIsAdd
                 <EventAdd
                     societyID={societyID}
                     setIsAdding={setIsAdding}
+                    getEventsList={getEventsList}
                 />
             )}
             {/* Edit */}

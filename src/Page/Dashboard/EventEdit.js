@@ -12,7 +12,7 @@ function EventEdit({ selectedEvent, setIsEditing, getEventsList }) {
     const [description, setDescription] = useState(selectedEvent.description);
     const societyID = selectedEvent.societyID;
     const eventID = selectedEvent.eventID;
-
+    const fileurl = selectedEvent.fileurl;
     const handleUpdate = async (e) => {
         e.preventDefault();
 
@@ -30,11 +30,21 @@ function EventEdit({ selectedEvent, setIsEditing, getEventsList }) {
             date,
             societyID,
             eventID,
+            description,
+            fileurl,
             userId
         };
-
-        const docRef = await doc(db, `societies/${selectedEvent.societyID}/events`, eventID );
-        await setDoc(docRef, newEvent);
+        try{
+            const docRef = await doc(db, `societies/${selectedEvent.societyID}/events`, eventID );
+            await setDoc(docRef, newEvent);
+        } catch(err){
+            return Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: `${err.message}`,
+                showConfirmButton: true
+            });
+        }
         
         Swal.fire({
             icon: 'success',
@@ -76,7 +86,7 @@ function EventEdit({ selectedEvent, setIsEditing, getEventsList }) {
                     value={description}
                     onChange={e => setDescription(e.target.value)}
                 />
-                <div style={{ marginTop: '30px' }}>
+                <div style={{ marginTop: '20px' }}>
                     <input type="submit" value="Update" />
                     <input
                         style={{ marginLeft: '12px' }}

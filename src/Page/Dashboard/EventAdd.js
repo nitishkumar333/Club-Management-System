@@ -3,13 +3,12 @@ import Swal from 'sweetalert2';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '../../config/firebase';
 import { doc, setDoc } from 'firebase/firestore';
-import FileUpload from './FileUpload';
 import styles from './Container.module.css'
 import { storage } from '../../config/firebase';
 import { getDownloadURL, ref, uploadBytesResumable,uploadBytes } from 'firebase/storage';
 import { AuthContext } from '../context';
 
-function EventAdd({ societyID, setIsAdding }) {
+function EventAdd({ societyID, setIsAdding, getEventsList }) {
     const {currentUser} = useContext(AuthContext);
     const [submitBtn,setSubmitBtn] = useState(true);
     const [nameOfEvent, setNameOfEvent] = useState('');
@@ -35,7 +34,19 @@ function EventAdd({ societyID, setIsAdding }) {
             userId
             // societyName
         }
-        await onAdd(newEventPath, newEventData, eventID);
+        try{
+            await onAdd(newEventPath, newEventData, eventID);
+        } catch(err){
+            console.log(err.message);
+        }
+        Swal.fire({
+            icon: 'success',
+            title: 'Added!',
+            text: `${nameOfEvent}'s data has been Added.`,
+            showConfirmButton: false,
+            timer: 1500
+        });
+        getEventsList();
         setIsAdding(false);
     }
     const uploadReport = async (file,societyID, eventID)=>{
@@ -54,13 +65,6 @@ function EventAdd({ societyID, setIsAdding }) {
     const onAdd = async (path, newEventData ,eventID) => {
         const dbRef = doc(db, path,eventID);
         await setDoc(dbRef,newEventData);
-        Swal.fire({
-            icon: 'success',
-            title: 'Added!',
-            text: `${nameOfEvent}'s data has been Added.`,
-            showConfirmButton: false,
-            timer: 1500
-        });
     }
 
     const handleAdd = async (e) => {
@@ -77,7 +81,16 @@ function EventAdd({ societyID, setIsAdding }) {
         
         if (societyID != null) {
             const eventID = uuidv4();
-            await uploadReport(file,societyID,eventID);
+            try{
+                await uploadReport(file,societyID,eventID);
+            } catch(err){
+                return Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: `${err.message}`,
+                    showConfirmButton: true
+                });
+            }
             // const newEventData = {
             //     eventID,
             //     societyID,
@@ -94,7 +107,7 @@ function EventAdd({ societyID, setIsAdding }) {
 
 
     return (
-        <div className='small-container-parent'>
+        <div className={styles.smallContainerParent}>
             <div className={styles.smallContainer}>
             <form onSubmit={handleAdd}>
                 <h1>Add Event Details</h1>
@@ -104,6 +117,7 @@ function EventAdd({ societyID, setIsAdding }) {
                     type="text"
                     name="nameOfEvent"
                     value={nameOfEvent}
+                    placeholder="Enter Name Of Event"
                     onChange={e => setNameOfEvent(e.target.value)}
                 />
                 <label htmlFor="date">Date</label>
@@ -112,6 +126,7 @@ function EventAdd({ societyID, setIsAdding }) {
                     type="text"
                     name="date"
                     value={date}
+                    placeholder="Enter Date Of Event"
                     onChange={e => setDate(e.target.value)}
                 />
                 <label htmlFor="description">Description</label>
@@ -120,10 +135,11 @@ function EventAdd({ societyID, setIsAdding }) {
                     type="text"
                     name="description"
                     value={description}
+                    placeholder="Enter Small Description"
                     onChange={e => setDescription(e.target.value)}
                 />
                 <label htmlFor="report">Upload Report</label>
-                    <input type="file" onChange={reportUploadHandler}/>
+                    <input type="file" onChange={reportUploadHandler} accept='.pdf'/>
                     {progress && <label style={{display:'inline-block', margin:'0', padding:'0'}}>{progress}%</label>}
                 {/* <input
                     id="report"
@@ -132,7 +148,7 @@ function EventAdd({ societyID, setIsAdding }) {
                     value={report}
                     onChange={e => setReport(e.target.value)}
                 /> */}
-                <div style={{ marginTop: '30px' }}>
+                <div style={{ marginTop: '20px' }}>
                     { submitBtn && <input type="submit" value="Add"/>}
                     { submitBtn && <input
                         style={{ marginLeft: '12px' }}

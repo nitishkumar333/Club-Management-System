@@ -11,12 +11,14 @@
   transition: all 0.6s ease;
 }
 .smallContainer {
-    margin-top: 5rem;
     max-width: 800px;
-    margin: auto;
     background-color: white;
-    padding: 1rem 4rem 1rem 4rem;
+    padding: 2rem 2rem 2rem 2rem;
     border-radius: 12px;
+}
+.smallContainer input[type=text]{
+  width: 400px;
+  border: 1px solid rgb(153, 153, 153);
 }
 .smallContainer h1{
   margin-top: 0;
@@ -25,10 +27,9 @@
 @media screen and (max-width: 1600px) {
     .smallContainer{
       max-width: 500px;
-      padding-top: 0;
+      padding-top: 1rem;
     }
     .smallContainer h1{
-      margin-top: 10px;
       font-size: 2rem;
     }
     .smallContainer input[type=text]{
@@ -37,4 +38,14 @@
     .smallContainer label{
         margin-bottom: 0;
       }
+  }
+
+  @media screen and (max-height: 700px){
+    .smallContainer label{
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    .smallContainer h1{
+      margin-bottom: 1rem;
+    }
   }

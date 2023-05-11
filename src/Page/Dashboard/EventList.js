@@ -1,5 +1,4 @@
 import React from 'react'
-import FileUpload from './FileUpload';
 import { db } from '../../config/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
@@ -41,14 +40,14 @@ function EventList({ eventDocs, handleEdit, handleDelete, getEventsList }) {
                                         <button>Report <FontAwesomeIcon icon={faDownload}/></button>
                                     </a> }
                                 </td>
-                                <td className="text-right" style={{textAlign:'center'}}>
-                                    <button
+                                <td className="text-center" >
+                                    <button style={{'border':'2px solid #007bff','color':'#007bff'}}
                                         onClick={() => handleEdit(event.societyID, event.eventID)}
                                         className="button muted-button"
                                     >
                                         Edit
                                     </button>
-                                    <button style={{marginLeft:'15px'}}
+                                    <button style={{marginLeft:'15px','background':'#e01d1d','color':'white'}}
                                         onClick={() => handleDelete(event.societyID, event.eventID)}
                                         className="button muted-button"
                                     >

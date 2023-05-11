@@ -3,8 +3,9 @@ import Swal from 'sweetalert2';
 import { db } from '../../config/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { AuthContext } from '../context';
+import styles from './Container.module.css'
 
-function Edit({ selectedMember, setIsEditing }) {
+function Edit({ selectedMember, setIsEditing, getMembersList }) {
     const {currentUser} = useContext(AuthContext);
     const [fullName, setFullName] = useState(selectedMember.fullName);
     const [deparement, setDeparement] = useState(selectedMember.deparement);
@@ -39,8 +40,17 @@ function Edit({ selectedMember, setIsEditing }) {
             userId
         };
 
-        const docRef = await doc(db, `societies/${societyID}/members`, memID);
-        await setDoc(docRef, member);
+        try{
+            const docRef = await doc(db, `societies/${societyID}/members`, memID);
+            await setDoc(docRef, member);
+        } catch(err){
+            return Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: `${err.message}`,
+                showConfirmButton: true
+            });
+        }
 
         Swal.fire({
             icon: 'success',
@@ -49,11 +59,13 @@ function Edit({ selectedMember, setIsEditing }) {
             showConfirmButton: false,
             timer: 1500
         });
+        getMembersList();
         setIsEditing(false);
     };
 
     return (
-        <div className="small-container">
+        <div className={styles.smallContainerParent}>
+            <div className={styles.smallContainer}>
             <form onSubmit={handleUpdate}>
                 <h1>Edit Member</h1>
                 <label htmlFor="societyName">Society Name</label>
@@ -104,7 +116,7 @@ function Edit({ selectedMember, setIsEditing }) {
                     value={contactNumber}
                     onChange={e => setContactNumber(e.target.value)}
                 />
-                <div style={{ marginTop: '30px' }}>
+                <div style={{ marginTop: '20px' }}>
                     <input type="submit" value="Update" />
                     <input
                         style={{ marginLeft: '12px' }}
@@ -115,6 +127,7 @@ function Edit({ selectedMember, setIsEditing }) {
                     />
                 </div>
             </form>
+        </div>
         </div>
     );
 }
