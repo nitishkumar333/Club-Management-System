@@ -7,6 +7,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useEffect } from 'react';
 import { AuthContext } from '../../context';
 import { useContext } from 'react';
+import Swal from 'sweetalert2';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -23,7 +24,16 @@ const Login = () => {
 
     const loginHandler =async (e)=>{
         e.preventDefault();
-        const userCredential = await signInWithEmailAndPassword(auth,email,password);
+        try{
+            const userCredential = await signInWithEmailAndPassword(auth,email,password);
+        } catch(err){
+            return Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Incorrect email Id or password.',
+                showConfirmButton: true
+            });
+        }
         setShouldRedirect(true);
         navigate("/");
     }
