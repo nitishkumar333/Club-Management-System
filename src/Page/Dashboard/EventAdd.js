@@ -19,7 +19,27 @@ function EventAdd({ societyID, setIsAdding, getEventsList }) {
     
     const reportUploadHandler = (e)=>{
         const file = e.target.files[0];
-        setFile(file);
+        const fileSize = ((file.size/1024)/1024).toFixed(4);
+        const filetype = file.type;
+        if(filetype !== 'application/pdf'){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Only PDFs are allowed',
+                showConfirmButton: true
+            });
+            setIsAdding(false);
+        }else if(fileSize>20){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'File Size should be less than 20mb',
+                showConfirmButton: true
+            });
+            setIsAdding(false);
+        } else{
+            setFile(file);
+        }
     }
     const afterFileUploaded = async (fileurl,eventID)=>{
         const newEventPath = `societies/${societyID}/events`;
@@ -141,13 +161,7 @@ function EventAdd({ societyID, setIsAdding, getEventsList }) {
                 <label htmlFor="report">Upload Report</label>
                     <input type="file" onChange={reportUploadHandler} accept='.pdf'/>
                     {progress && <label style={{display:'inline-block', margin:'0', padding:'0'}}>{progress}%</label>}
-                {/* <input
-                    id="report"
-                    type="file"
-                    name="report"
-                    value={report}
-                    onChange={e => setReport(e.target.value)}
-                /> */}
+                    
                 <div style={{ marginTop: '20px' }}>
                     { submitBtn && <input type="submit" value="Add"/>}
                     { submitBtn && <input

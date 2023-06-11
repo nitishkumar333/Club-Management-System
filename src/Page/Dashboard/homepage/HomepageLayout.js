@@ -23,7 +23,7 @@ function HomepageLayout() {
         {
             path: '/', element: <RootLayout />,
             children: [
-                { index:true, element: <RequireAuth><Homepage /></RequireAuth>, loader: initialListLoader },
+                { index:true, element: <RequireAuth><Homepage /></RequireAuth> },
                 { path: 'login', element: <Login />},
                 { path: ':societyID', element: <RequireAuth><SocietyDashboard /></RequireAuth> },
             ]

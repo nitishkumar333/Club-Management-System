@@ -6,6 +6,8 @@ import Events from './Page/Dashboard/Events';
 import Homepage from './Page/Dashboard/homepage/Homepage';
 import { useParams } from 'react-router-dom';
 import Navbar from './Page/Dashboard/Navbar';
+import { useLocation } from "react-router-dom";
+import styles from './Page/Dashboard/Container.module.css'
 
 function SocietyDashboard() {
   const params = useParams();
@@ -32,24 +34,26 @@ function SocietyDashboard() {
   //   }
   //   getSocietiesList();
   // }, [])
-  // const [memIsEditing, setMemIsEditing] = useState(false);
-  // const [eventIsEditing, setEventIsEditing] = useState(false);
-  // const [memIsAdding, setMemIsAdding] = useState(false);
-  // const [eventIsAdding, setEventIsAdding] = useState(false);
 
-  const {name, id} = useParams();
-  
+  const location = useLocation();
+  const url = location.state?.logoURL;
   return (
-    <div>
+    <div className='container'>
       <Navbar/>
+    <div className={styles.containerParent}>
+      <div className='societyLogo'>
+        <img src={url} alt="" style={{'borderRadius':'50%'}}/>
+        <h1 style={{'margin':'0'}}>{location.state?.name.toUpperCase()}</h1>
+      </div>
       { <MembersDashboard
         societyID={params.societyID}
-        societyName={name}
+        societyName={location.state?.societyName}
         />}
         
       { <Events
         societyID={params.societyID}
         />}
+    </div>
     </div>
   );
 }

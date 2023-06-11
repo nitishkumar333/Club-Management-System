@@ -139,7 +139,12 @@ function Add({ societyID, setIsAdding, getMembersList }) {
                     name="contactNumber"
                     value={contactNumber}
                     placeholder="Enter Contact Number"
-                    onChange={e => setContactNumber(e.target.value)}
+                    onChange={e =>{
+                        if(contactNumber.length>=10)
+                        setContactNumber(e.target.value.substring(0,10))
+                        else
+                        setContactNumber(e.target.value)
+                    }}
                 />
                 <div style={{ marginTop: '20px' }}>
                     <input type="submit" value="Add" />

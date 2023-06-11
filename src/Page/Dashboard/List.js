@@ -1,7 +1,5 @@
 import React from 'react'
-import { db } from '../../config/firebase';
-import { collection, getDocs } from 'firebase/firestore';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 function List({ members, handleEdit, handleDelete, getMembersList }) {
 
@@ -32,9 +30,9 @@ function List({ members, handleEdit, handleDelete, getMembersList }) {
                             <tr key={member.memID}>
                                 <td>{i + 1}</td>
                                 <td>{member.fullName}</td>
-                                <td>{member.deparement}</td>
+                                <td>{member.deparement.toUpperCase()}</td>
                                 <td>{member.position}</td>
-                                <td>{member.email}</td>
+                                <td>{member.email.toLowerCase()}</td>
                                 <td>{member.contactNumber} </td>
                                 <td className="text-center">
                                     <button style={{'border':'2px solid #007bff','color':'#007bff'}}

@@ -7,37 +7,38 @@ import { auth, db } from '../../../config/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import { signOut } from "firebase/auth";
 import { AuthContext } from '../../context';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import AddClub from './AddClub';
 
 function Homepage() {
     const {currentUser} = useContext(AuthContext);
-    console.log("homepage",currentUser);
-    // const [societies, setSocieties] = useState([]);
-    const societies = useLoaderData();
+    
+    const [societies, setSocieties] = useState([]);
+    // const societies = useLoaderData();
     const [inputText, setInputText] = useState('');
     const [searchList, setSearchList] = useState();
-    const navigate = useNavigate();
-    // const listClickHandler = (society) => {
-    //     console.log("clicked");
-    //     navigate(`/${society.id}`, { state: { name: society.societyName, id: society.id } });
-    //     // <Link to={`${society.id}`} state={{ name: society.societyName, id: society.id }}></Link>
-    // }
-    
-    // useEffect(async () => {
-    //     console.log("useEffect emptyDependency");
-    //     let result = [];
-    //     const dbRef = collection(db, "societies");
-    //     const docsData = await getDocs(dbRef);
-    //     const filteredSocieties = await docsData.docs.map((doc) => ({
-    //         societyName: doc.data().societyName.toUpperCase(),
-    //         id: doc.id
-    //     }));
-    //     setSearchList(getSearchList(filteredSocieties));
-    //     setSocieties(filteredSocieties);
-    // }, [])
+    const [clubIsAdding, setClubIsAdding] = useState(false);
 
+    async function loader(){
+        console.log("useEffect emptyDependency");
+        let result = [];
+        const dbRef = collection(db, "societies");
+        const docsData = await getDocs(dbRef);
+        const filteredSocieties = await docsData.docs.map((doc) => ({
+            societyName: doc.data().societyName.toUpperCase(),
+            id: doc.id,
+            logoURL: doc.data().logoURL
+        }));
+        setSearchList(getSearchList(filteredSocieties));
+        setSocieties(filteredSocieties);
+    }
+    useEffect(()=>{
+        loader();
+    },[]);
     function getSearchList(resultArr) {
         const content = resultArr.map((society) => {
-            return <Link key={society.id} to={`${society.id}`} state={{ name: society.societyName, id: society.id }}>
+            return <Link key={society.id} to={`${society.id}`} state={{ name: society.societyName, id: society.id, logoURL: society.logoURL }}>
                 <li>{society.societyName}</li>
             </Link>
         })
@@ -66,12 +67,16 @@ function Homepage() {
     }, [inputText])
 
     return (
-        <div className={`container ${styles.homepage}`}>
+        <>
+            <div className={`container ${styles.homepage}`}>
             <div className={styles.homepageContainer}>
             <div className={styles.imageContainer}>
                 <img src={logo} alt="" />
             </div>
-            <button onClick={signOutHandler}>Sign Out</button>
+            <div>
+                <button onClick={()=>setClubIsAdding(true)} style={{'marginRight':'10px','backgroundColor':'#13ae4b', 'color':'white'}}>+ Add Club</button>
+                <button onClick={signOutHandler} style={{'backgroundColor':'#e01d1d', 'color':'white'}}>Sign Out <FontAwesomeIcon icon={faArrowRightFromBracket} /></button>
+            </div>
             <div>
                 <label>Clubs in Raj Kumar Goel Institute Of Technology</label>
                 <div className={styles['search-bar']}>
@@ -84,21 +89,23 @@ function Homepage() {
             </div>
             </div>
         </div>
+        <div className='container'>{clubIsAdding && <AddClub setClubIsAdding={setClubIsAdding} loader={loader}/>}</div>
+        </>
     )
 }
 
 export default Homepage;
 
-export async function loader(){
-        console.log("useEffect emptyDependency");
-        let result = [];
-        const dbRef = collection(db, "societies");
-        const docsData = await getDocs(dbRef);
-        const filteredSocieties = await docsData.docs.map((doc) => ({
-            societyName: doc.data().societyName.toUpperCase(),
-            id: doc.id
-        }));
-        return filteredSocieties;
-        // setSearchList(getSearchList(filteredSocieties));
-        // setSocieties(filteredSocieties);
-    }
+// export async function loader(){
+//         console.log("useEffect emptyDependency");
+//         let result = [];
+//         const dbRef = collection(db, "societies");
+//         const docsData = await getDocs(dbRef);
+//         const filteredSocieties = await docsData.docs.map((doc) => ({
+//             societyName: doc.data().societyName.toUpperCase(),
+//             id: doc.id
+//         }));
+//         return filteredSocieties;
+//         // setSearchList(getSearchList(filteredSocieties));
+//         // setSocieties(filteredSocieties);
+//     }

@@ -10,11 +10,24 @@
 .container button{
   border-radius: 5px;
 }
-.small-container-parent{
-  /* max-height: 60vh; */
-  /* margin: auto; */
+.societyLogo{
+  /* max-width: 1200px; */
+  background-color: rgba(38, 41, 44,0.1);
+  margin: auto;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
-
+.societyLogo img{
+  margin-left: 2rem;
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+.societyLogo h1{
+  color: #26292c;
+}
 
 @media screen and (max-width: 1400px) {
   .small-container-parent .small-container{
